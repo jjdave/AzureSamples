@@ -1,6 +1,7 @@
 ﻿namespace QueueTests
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Storage;
@@ -50,6 +51,54 @@
 
             // Cleanup 
             await queueService.DeleteMessageAsync(message);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task VerifyQueueService_Get0Messages()
+        {
+            // Arrange
+            IQueueService queueService = new QueueService("UseDevelopmentStorage=true", "testqueue");
+
+            // Act
+            var messages = await queueService.GetMessagesAsync(0, TimeSpan.FromHours(1));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task VerifyQueueService_Get35Messages()
+        {
+            // Arrange
+            IQueueService queueService = new QueueService("UseDevelopmentStorage=true", "testqueue");
+
+            // Act
+            var messages = await queueService.GetMessagesAsync(35, TimeSpan.FromHours(1));
+        }
+
+        [TestMethod]
+        public async Task VerifyQueueService_Add10Messages_Get5Messages_DeleteMessages()
+        {
+            // Arrange
+            IQueueService queueService = new QueueService("UseDevelopmentStorage=true", "testqueue");
+
+            // Act
+            for (var messageCount = 0; messageCount < 10; messageCount++)
+            {
+                await queueService.AddMessageAsync("test "+ messageCount.ToString());
+            }
+
+            var messages = await queueService.GetMessagesAsync(5, TimeSpan.FromHours(1));
+
+            // Assert
+            Assert.IsNotNull(queueService);
+            Assert.IsNotNull(messages);
+            Assert.AreEqual(5, messages.Count());
+
+            // Cleanup 
+            foreach (var message in messages)
+            {
+                await queueService.DeleteMessageAsync(message);
+            }
         }
 
         [TestMethod]

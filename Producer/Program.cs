@@ -14,7 +14,7 @@
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Producer - adding messages to Azure queue 500 ms.");
+            Console.WriteLine("Producer - adding messages to Azure queue 250 ms.");
             Console.CancelKeyPress += Console_CancelKeyPress;
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -40,7 +40,7 @@
                 Console.SetCursorPosition(0, 5);
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("Added to queue: " + message);
-                Thread.Sleep(500);
+                Thread.Sleep(250);
             }
 
             Console.ForegroundColor = ConsoleColor.White;

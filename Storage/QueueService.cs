@@ -8,6 +8,8 @@
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Auth;
+    using System.Collections;
+    using System.Collections.Generic;
 
 
     /// <summary>
@@ -143,6 +145,35 @@
             return await sampleQueue.GetMessageAsync();
         }
 
+        /// <summary>
+        /// Gets the number of messages in the queue as defined by <paramref name="messageCount"/>. Azure will make the message invisible to all consumers for a default of 30 seconds.
+        /// </summary>
+        /// <param name="messageCount">number of messages to retrieve. Must be greater than zero and a maximum of 32.</param>
+        /// <param name="invisibleFor"><see cref="TimeSpan"/> that indicates how long to keep the messages invisible from other consumers for.</param>
+        /// <returns><see cref="Task{CloudQueueMessage}"/></returns>
+        /// <exception cref="ArgumentException">thrown if <paramref name="messageCount"/> is less than 1.</exception>
+        public async Task<IEnumerable<CloudQueueMessage>> GetMessagesAsync(int messageCount, TimeSpan invisibleFor)
+        {
+            if (messageCount < 1 || messageCount > 32)
+            {
+                throw new ArgumentException("must be > 0 and < = 32", nameof(messageCount));
+            }
+
+            // Creates the azure queue service client.
+            CloudQueueClient queueClient = cloudStorageAccount.CreateCloudQueueClient();
+
+            // Gets a reference to the queue. Queue names must be lowercase.
+            CloudQueue sampleQueue = queueClient.GetQueueReference(queueName);
+
+            // Get the queue, creating it if it does not exist.
+            await sampleQueue.CreateIfNotExistsAsync();
+
+            var operationContext = new OperationContext();
+
+            // Gets the set of messages from the queue. 
+            // Azure will also make the messages invisble to other consumers for the value defined in invisibleFor. 
+            return await sampleQueue.GetMessagesAsync(messageCount, invisibleFor, queueClient.DefaultRequestOptions, operationContext);
+        }
 
         /// <summary>
         /// Deletes the given <paramref name="message"/> from the queue.
