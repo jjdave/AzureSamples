@@ -43,7 +43,7 @@
                     {
                         emptyCleared = true;
                         Console.SetCursorPosition(0, 4);
-                        Console.WriteLine(Enumerable.Repeat(string.Empty, 25));
+                        Console.WriteLine(string.Empty.PadLeft(25));
                     }
 
                     messagesRead++;
