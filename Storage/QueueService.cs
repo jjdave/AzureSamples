@@ -51,35 +51,6 @@
         }
 
         /// <summary>
-        /// Returns an instance of the <see cref="QueueService"/>
-        /// </summary>
-        /// <param name="queueStorageConnectionString">Azure storage queue configuration.</param>
-        /// <param name="queueName">Queue name, must be all lowercase.</param>
-        /// <exception cref="ArgumentException">if <paramref name="queueStorageConnectionString"/> or <paramref name="queueName"/> are null, empty or whitespace.</exception>
-        public QueueService(bool a, string sas, string queueName)
-        {
-
-            if (string.IsNullOrWhiteSpace(queueName))
-            {
-                throw new ArgumentException("must not be empty, null or whitespace.", nameof(queueName));
-            }
-
-            this.queueName = queueName.ToLower();
-
-            // Connection string for Queue storage from the config file of the respective application using this library.
-            // var queueConfig = CloudConfigurationManager.GetSetting(QueueStorageConnectionKeyName);
-
-
-            // Create new storage credentials using the SAS token.
-           // StorageCredentials accountSAS = new StorageCredentials(sasToken);
-
-            // Use these credentials and the account name to create a Blob service client.
-            //CloudStorageAccount accountWithSAS = new CloudStorageAccount(accountSAS, "account-name", endpointSuffix: null, useHttps: true);
-
-            //cloudStorageAccount = CloudStorageAccount.Parse(queueStorageConnectionString);
-        }
-
-        /// <summary>
         /// Adds a message to the queue
         /// </summary>
         /// <param name="message">a valid message string.</param>
